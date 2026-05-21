@@ -1,2 +1,139 @@
 # qordlgks
-qordlgks
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>할 일 캘린더</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .task-list {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .task {
+      background: white;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📅 할 일 캘린더</h1>
+
+  <div class="input-area">
+    <input type="date" id="date">
+    <input type="text" id="todo" placeholder="할 일을 입력하세요">
+    <button onclick="addTask()">추가</button>
+  </div>
+
+  <div class="task-list" id="taskList"></div>
+
+  <script>
+    let tasks = [];
+
+    function addTask() {
+      const date = document.getElementById("date").value;
+      const todo = document.getElementById("todo").value;
+
+      if (!date || !todo) {
+        alert("날짜와 할 일을 입력하세요!");
+        return;
+      }
+
+      const task = {
+        id: Date.now(),
+        date,
+        todo,
+        completed: false
+      };
+
+      tasks.push(task);
+
+      document.getElementById("todo").value = "";
+
+      renderTasks();
+    }
+
+    function toggleComplete(id) {
+      tasks = tasks.map(task => {
+        if (task.id === id) {
+          task.completed = !task.completed;
+        }
+        return task;
+      });
+
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const taskList = document.getElementById("taskList");
+
+      taskList.innerHTML = "";
+
+      tasks.forEach(task => {
+        const div = document.createElement("div");
+        div.className = "task";
+
+        div.innerHTML = `
+          <div class="${task.completed ? 'completed' : ''}">
+            <strong>${task.date}</strong> - ${task.todo}
+          </div>
+
+          <button onclick="toggleComplete(${task.id})">
+            ${task.completed ? '✅ 완료됨' : '완료'}
+          </button>
+        `;
+
+        taskList.appendChild(div);
+      });
+    }
+  </script>
+
+</body>
+</html>
